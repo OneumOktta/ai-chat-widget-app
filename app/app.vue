@@ -13,7 +13,6 @@
       class="animate-float fixed -bottom-[10%] -left-[10%] h-[600px] w-[600px] rounded-full bg-primary-gradient-alt opacity-30 blur-[120px]"
     />
     <div class="relative z-10">
-      <ThemeToggle />
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>

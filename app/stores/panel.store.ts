@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import type { MeResponse } from '~/types/auth.types'
+import { useApiKeyStore } from './apiKey.store'
 
 interface PanelState {
   isLoading: boolean
@@ -16,6 +17,7 @@ interface PanelState {
     id: string
     title: string
   }>
+  currentApiKey: string | null
 }
 
 export const usePanelStore = defineStore('panel', {
@@ -24,6 +26,7 @@ export const usePanelStore = defineStore('panel', {
     error: null,
     user: null,
     apiKeys: [],
+    currentApiKey: null,
   }),
 
   getters: {
@@ -33,6 +36,16 @@ export const usePanelStore = defineStore('panel', {
   },
 
   actions: {
+    setCurrentApiKey(apiKeyId: string) {
+      const exists = this.apiKeys.some((key) => key.id === apiKeyId)
+      if (exists) {
+        this.currentApiKey = apiKeyId
+        // Загружаем данные при смене ключа
+        const apiKeyStore = useApiKeyStore()
+        apiKeyStore.fetchApiKeyData(apiKeyId)
+      }
+    },
+
     async fetchUserData() {
       if (!import.meta.client) return
 
@@ -55,10 +68,20 @@ export const usePanelStore = defineStore('panel', {
         if (data.value?.success) {
           this.user = data.value.data.user
           this.apiKeys = data.value.data.apiKeys
+
+          // Устанавливаем первый ключ как текущий, если ключа еще нет
+          if (!this.currentApiKey && this.apiKeys.length > 0) {
+            this.currentApiKey = this.apiKeys[0]?.id || null
+          }
+
+          // Загружаем данные для текущего ключа
+          if (this.currentApiKey) {
+            const apiKeyStore = useApiKeyStore()
+            await apiKeyStore.fetchApiKeyData(this.currentApiKey)
+          }
         }
       } catch (err) {
         this.error = 'Ошибка при получении данных'
-        // localStorage.removeItem('accessToken')
       } finally {
         this.isLoading = false
       }
@@ -69,6 +92,7 @@ export const usePanelStore = defineStore('panel', {
       this.error = null
       this.user = null
       this.apiKeys = []
+      this.currentApiKey = null
     },
   },
 

@@ -16,6 +16,7 @@
 
 <template>
   <main class="container">
+    <ThemeToggle />
     <Header />
     <slot />
     <Prices />

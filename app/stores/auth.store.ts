@@ -89,9 +89,11 @@ export const useAuthStore = defineStore('authStore', {
 
     async logout() {
       try {
-        await $fetch('/api/auth/logout', {
+        await useAuthFetch('/auth/logout', {
           method: 'POST',
-          body: {},
+          body: {
+            refreshToken: this.tokens?.refreshToken,
+          },
         })
       } catch (error: unknown) {
         const err = error as FetchError<AuthError>
@@ -99,6 +101,8 @@ export const useAuthStore = defineStore('authStore', {
       } finally {
         this.user = null
         this.tokens = null
+        localStorage.removeItem('accessToken')
+        navigateTo('/panel/login')
       }
     },
   },

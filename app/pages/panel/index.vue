@@ -1,4 +1,7 @@
 <script setup lang="ts">
+  import ChatStatsTile from '~/components/panel/tiles/ChatStatsTile.vue'
+  import EducationTile from '~/components/panel/tiles/EducationTile.vue'
+  import VisitorsStatsTile from '~/components/panel/tiles/VisitorsStatsTile.vue'
   import { usePanelStore } from '~/stores/panel.store'
 
   definePageMeta({
@@ -20,11 +23,19 @@
 
 <template>
   <div v-if="!panelStore.isLoading" class="flex min-h-screen flex-col">
-    <PanelContent>
-      <h1 class="mb-6 text-2xl font-semibold">
-        С возвращением, {{ panelStore.user?.name || 'путник' }}!
-      </h1>
-    </PanelContent>
+    <div class="grid h-full grid-cols-7 gap-4">
+      <PanelTile :cols="3">
+        <EducationTile />
+      </PanelTile>
+
+      <PanelTile :cols="2">
+        <ChatStatsTile />
+      </PanelTile>
+
+      <PanelTile :cols="2">
+        <VisitorsStatsTile />
+      </PanelTile>
+    </div>
   </div>
 </template>
 
