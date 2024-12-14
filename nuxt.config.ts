@@ -4,6 +4,11 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4,
   },
+  runtimeConfig: {
+    public: {
+      apiBaseUrl: process.env.MAIN_BACKEND_URL,
+    },
+  },
 
   components: {
     dirs: [

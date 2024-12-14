@@ -9,17 +9,19 @@
   defineEmits<{
     'update:modelValue': [value: boolean]
   }>()
+
+  const input = ref<HTMLInputElement>()
 </script>
 
 <template>
   <label class="flex cursor-pointer select-none items-start gap-3">
     <input
-      :checked="modelValue"
+      ref="input"
+      :value="modelValue"
       type="checkbox"
       class="h-5 w-5 cursor-pointer rounded border-2 border-light-text/10 accent-lightBlue transition-colors dark:border-dark-text/10"
-      :required="required"
       style="margin-top: 4px"
-      @change="
+      @input="
         $emit('update:modelValue', ($event.target as HTMLInputElement).checked)
       "
     />

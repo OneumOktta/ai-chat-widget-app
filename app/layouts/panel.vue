@@ -4,7 +4,7 @@
 </script>
 
 <template>
-  <div class="flex min-h-screen flex-col">
+  <div>
     <PanelHeader />
     <div class="flex flex-1">
       <PanelSidebar />

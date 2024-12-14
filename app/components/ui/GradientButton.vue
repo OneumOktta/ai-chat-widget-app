@@ -2,6 +2,11 @@
   defineProps<{
     to?: string
     variant?: 'primary' | 'secondary'
+    type?: 'button' | 'submit'
+  }>()
+
+  defineEmits<{
+    click: []
   }>()
 </script>
 
@@ -9,7 +14,9 @@
   <component
     :is="to ? 'NuxtLink' : 'button'"
     :to="to"
+    :type="type || 'button'"
     class="group relative cursor-pointer rounded-2xl bg-gradient-to-r from-lightPink to-lightBlue px-6 py-4 text-dark-text shadow-lg transition-all duration-300 hover:opacity-100 hover:shadow-xl"
+    @click="$emit('click')"
   >
     <span class="relative z-10">
       <slot />

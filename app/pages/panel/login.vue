@@ -1,18 +1,30 @@
 <script setup lang="ts">
+  import { useAuthStore } from '~/stores/auth.store'
+  import type { LoginCredentials } from '~/types/auth.types'
+
   definePageMeta({
     layout: 'auth',
   })
 
-  const formData = ref({
+  const auth = useAuthStore()
+  const router = useRouter()
+
+  const formData = ref<LoginCredentials>({
     email: '',
     password: '',
   })
 
   const rememberMe = ref(false)
 
-  const handleSubmit = () => {
-    // TODO: Реализовать авторизацию
-    return navigateTo('/panel')
+  const handleSubmit = async () => {
+    try {
+      const response = await auth.login(formData.value)
+      if (response?.success) {
+        router.push('/panel')
+      }
+    } catch (error) {
+      // Ошибка уже обработана в сторе
+    }
   }
 </script>
 
@@ -44,7 +56,7 @@
         <BaseCheckbox v-model="rememberMe">Запомнить меня</BaseCheckbox>
 
         <NuxtLink
-          to="/panel/reset-password"
+          to="/forgot-password"
           class="text-lightPink transition-colors hover:text-lightBlue"
         >
           Забыли пароль?
@@ -52,9 +64,14 @@
       </div>
 
       <div class="space-y-10 pt-8">
-        <GradientButton type="submit" class="w-full">Войти</GradientButton>
+        <div v-if="auth.error" class="text-center text-red-500">
+          {{ auth.error }}
+        </div>
 
-        <!-- Social Login -->
+        <GradientButton type="submit" class="w-full" :disabled="auth.loading">
+          {{ auth.loading ? 'Вход...' : 'Войти' }}
+        </GradientButton>
+
         <div class="text-center">
           <p class="mb-4 text-light-text/60 dark:text-dark-text/60">
             Вы можете войти с помощью:
@@ -75,7 +92,6 @@
           </div>
         </div>
 
-        <!-- Register Link -->
         <div class="text-center">
           <p class="text-light-text/60 dark:text-dark-text/60">
             У Вас нет аккаунта?
