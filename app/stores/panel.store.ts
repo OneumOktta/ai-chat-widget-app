@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import type { MeResponse } from '~/types/auth.types'
 
 interface PanelState {
   isLoading: boolean
@@ -32,48 +33,20 @@ export const usePanelStore = defineStore('panel', {
   },
 
   actions: {
-    setLoading(value: boolean) {
-      this.isLoading = value
-    },
-
-    setError(error: string | null) {
-      this.error = error
-    },
-
-    setUser(user: PanelState['user']) {
-      this.user = user
-    },
-
-    setApiKeys(keys: PanelState['apiKeys']) {
-      this.apiKeys = keys
-    },
-
-    clearStore() {
-      this.isLoading = false
-      this.error = null
-      this.user = null
-      this.apiKeys = []
-    },
-
     async fetchUserData() {
+      if (!import.meta.client) return
+
       try {
         this.isLoading = true
         this.error = null
 
         const accessToken = localStorage.getItem('accessToken')
         if (!accessToken) {
-          throw new Error('Нет токена доступа')
+          this.error = 'Нет токена доступа'
+          return
         }
 
-        const { data, error } = await useFetch<{
-          success: boolean
-          data: { user: PanelState['user']; apiKeys: PanelState['apiKeys'] }
-        }>('/auth/me', {
-          baseURL: useRuntimeConfig().public.apiBaseUrl,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
+        const { data, error } = await useAuthFetch<MeResponse>('/auth/me')
 
         if (error.value) {
           throw error.value
@@ -84,12 +57,20 @@ export const usePanelStore = defineStore('panel', {
           this.apiKeys = data.value.data.apiKeys
         }
       } catch (err) {
-        this.error = 'Ошибка при получении данных пользователя'
-        localStorage.removeItem('accessToken')
-        navigateTo('/panel/login')
+        this.error = 'Ошибка при получении данных'
+        // localStorage.removeItem('accessToken')
       } finally {
         this.isLoading = false
       }
     },
+
+    clearStore() {
+      this.isLoading = false
+      this.error = null
+      this.user = null
+      this.apiKeys = []
+    },
   },
+
+  persist: true,
 })

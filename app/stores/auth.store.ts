@@ -10,7 +10,8 @@ import type {
   RegisterResponse,
 } from '~/types/auth.types'
 
-export const useAuthStore = defineStore('auth', {
+export const useAuthStore = defineStore('authStore', {
+  persist: true,
   state: (): AuthState => ({
     user: null,
     tokens: null,
@@ -19,6 +20,14 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   actions: {
+    async getRole() {
+      return this.user?.role
+    },
+
+    async getToken() {
+      return this.tokens?.accessToken
+    },
+
     async login(
       credentials: LoginCredentials
     ): Promise<AuthResponse | undefined> {
@@ -35,6 +44,8 @@ export const useAuthStore = defineStore('auth', {
         )
 
         if (response.success) {
+          this.user = response.data.user
+          this.tokens = response.data.tokens
           localStorage.setItem('accessToken', response.data.tokens.accessToken)
           navigateTo('/panel')
         }
@@ -80,7 +91,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         await $fetch('/api/auth/logout', {
           method: 'POST',
-          body: { refreshToken: this.tokens?.refreshToken },
+          body: {},
         })
       } catch (error: unknown) {
         const err = error as FetchError<AuthError>
@@ -88,7 +99,6 @@ export const useAuthStore = defineStore('auth', {
       } finally {
         this.user = null
         this.tokens = null
-        localStorage.removeItem('accessToken')
       }
     },
   },

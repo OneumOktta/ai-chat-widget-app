@@ -1,10 +1,7 @@
 <script setup lang="ts">
   import type { FetchError } from 'ofetch'
   import { z } from 'zod'
-  import {
-    resendActivationSchema,
-    translateError,
-  } from '~/schemas/activation.schema'
+  import { resendActivationSchema, translateError } from '~/schemas/auth.schema'
 
   definePageMeta({
     layout: 'auth',

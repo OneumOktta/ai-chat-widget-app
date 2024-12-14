@@ -4,6 +4,7 @@
 
   definePageMeta({
     layout: 'auth',
+    middleware: ['panel'],
   })
 
   const auth = useAuthStore()

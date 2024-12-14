@@ -26,6 +26,7 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxt/eslint',
     '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt',
   ],
 
   googleFonts: {
@@ -35,6 +36,11 @@ export default defineNuxtConfig({
   },
   colorMode: {
     preference: 'auto',
+  },
+  nitro: {
+    routeRules: {
+      '/proxy/**': { proxy: 'https://chat-api.esoraine.online/api/v1/**' },
+    },
   },
   devServer: {
     host: '0.0.0.0',

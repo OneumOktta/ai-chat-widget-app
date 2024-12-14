@@ -24,11 +24,32 @@ export const registerSchema = z
     }),
   })
   .refine((data) => data.password === data.passwordConfirm, {
-    message: 'Па��оли не совпадают',
+    message: 'Пароли не совпадают',
     path: ['passwordConfirm'],
   })
 
 export type RegisterFormData = z.infer<typeof registerSchema>
+
+export const resendActivationSchema = z.object({
+  email: z
+    .string({
+      required_error: 'Email обязателен для заполнения',
+    })
+    .email('Введите корректный email'),
+})
+
+export const resetPasswordSchema = z.object({
+  newPassword: z
+    .string({
+      required_error: 'Пароль обязателен для заполнения',
+    })
+    .min(8, 'Пароль должен содержать минимум 8 символов')
+    .regex(/[A-Z]/, 'Пароль должен содержать хотя бы одну заглавную букву')
+    .regex(/[0-9]/, 'Пароль должен содержать хотя бы одну цифру'),
+  passwordConfirm: z.string({
+    required_error: 'Подтвердите пароль',
+  }),
+})
 
 export const translateError = (message?: string): string => {
   if (!message) return 'Произошла ошибка'
@@ -50,16 +71,3 @@ export const translateError = (message?: string): string => {
       return message
   }
 }
-
-export const resetPasswordSchema = z.object({
-  newPassword: z
-    .string({
-      required_error: 'Пароль обязателен для заполнения',
-    })
-    .min(8, 'Пароль должен содержать минимум 8 символов')
-    .regex(/[A-Z]/, 'Пароль должен содержать хотя бы одну заглавную букву')
-    .regex(/[0-9]/, 'Пароль должен содержать хотя бы одну цифру'),
-  passwordConfirm: z.string({
-    required_error: 'Подтвердите пароль',
-  }),
-})

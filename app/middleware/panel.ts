@@ -1,17 +1,40 @@
-export default defineNuxtRouteMiddleware((to) => {
-  // Проверяем только на клиенте
-  if (import.meta.client) {
-    const accessToken = localStorage.getItem('accessToken')
+import type { MeResponse } from '~/types/auth.types'
 
-    if (to.path === '/panel/login') {
-      if (accessToken) {
-        return navigateTo('/panel')
+export default defineNuxtRouteMiddleware(async (to) => {
+  if (import.meta.server) {
+    return
+  }
+
+  if (to.path === '/panel/login') {
+    const accessToken = localStorage.getItem('accessToken')
+    if (accessToken) {
+      try {
+        const { data, error } = await useAuthFetch<MeResponse>('/auth/me')
+        if (!error.value && data.value?.success) {
+          return navigateTo('/panel', { replace: true })
+        }
+      } catch {
+        localStorage.removeItem('accessToken')
       }
-      return
+    }
+    return
+  }
+
+  if (to.path.startsWith('/panel')) {
+    const accessToken = localStorage.getItem('accessToken')
+    if (!accessToken) {
+      return navigateTo('/panel/login', { replace: true })
     }
 
-    if (to.path.startsWith('/panel') && !accessToken) {
-      return navigateTo('/panel/login')
+    try {
+      const { data, error } = await useAuthFetch<MeResponse>('/auth/me')
+      if (error.value || !data.value?.success) {
+        localStorage.removeItem('accessToken')
+        return navigateTo('/panel/login', { replace: true })
+      }
+    } catch (err) {
+      localStorage.removeItem('accessToken')
+      return navigateTo('/panel/login', { replace: true })
     }
   }
 })
