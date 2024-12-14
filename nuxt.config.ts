@@ -5,26 +5,6 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
 
-  // experimental: {
-  // 	scanPageMeta: 'after-resolve',
-  // 	sharedPrerenderData: false,
-  // 	compileTemplate: true,
-  // 	resetAsyncDataToUndefined: true,
-  // 	templateUtils: true,
-  // 	relativeWatchPaths: true,
-  // 	normalizeComponentNames: false,
-  // 	defaults: {
-  // 		useAsyncData: {
-  // 			deep: true,
-  // 		},
-  // 	},
-  // },
-
-  // unhead: {
-  // 	renderSSRHeadOptions: {
-  // 		omitLineBreaks: false,
-  // 	},
-  // },
   components: {
     dirs: [
       {
@@ -40,6 +20,7 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/ui',
     '@nuxt/eslint',
+    '@pinia/nuxt',
   ],
 
   googleFonts: {
