@@ -4,7 +4,7 @@
   const apiKeyStore = useApiKeyStore()
 
   const totalVisitors = computed(() => {
-    return apiKeyStore.statistics?.totalChatsStarted || 0
+    return apiKeyStore.hourlyStats?.totals.chatsStarted || 0
   })
 </script>
 

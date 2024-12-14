@@ -1,6 +1,10 @@
 <script setup lang="ts">
   import ChatStatsTile from '~/components/panel/tiles/ChatStatsTile.vue'
   import EducationTile from '~/components/panel/tiles/EducationTile.vue'
+  import MessagesDistributionTile from '~/components/panel/tiles/MessagesDistributionTile.vue'
+  import PerformanceTile from '~/components/panel/tiles/PerformanceTile.vue'
+  import TokenUsageTile from '~/components/panel/tiles/TokenUsageTile.vue'
+  import UsersInfoTile from '~/components/panel/tiles/UsersInfoTile.vue'
   import VisitorsStatsTile from '~/components/panel/tiles/VisitorsStatsTile.vue'
   import { usePanelStore } from '~/stores/panel.store'
 
@@ -34,6 +38,26 @@
 
       <PanelTile :cols="2">
         <VisitorsStatsTile />
+      </PanelTile>
+
+      <PanelTile :cols="4">
+        <RequestTile />
+      </PanelTile>
+
+      <PanelTile :cols="3">
+        <TokenUsageTile />
+      </PanelTile>
+
+      <PanelTile :cols="2">
+        <PerformanceTile />
+      </PanelTile>
+
+      <PanelTile :cols="3">
+        <MessagesDistributionTile />
+      </PanelTile>
+
+      <PanelTile :cols="2">
+        <UsersInfoTile />
       </PanelTile>
     </div>
   </div>

@@ -1,6 +1,6 @@
 import type { FetchError } from 'ofetch'
 import { defineStore } from 'pinia'
-import type { ApiKeyState } from '~/types/apiKey.types'
+import type { ApiKeyState, HourlyStats } from '~/types/apiKey.types'
 
 interface ApiResponse<T> {
   success: boolean
@@ -14,6 +14,7 @@ export const useApiKeyStore = defineStore('apiKey', {
     apiKeyInfo: null,
     users: null,
     statistics: null,
+    hourlyStats: null,
   }),
 
   actions: {
@@ -22,7 +23,12 @@ export const useApiKeyStore = defineStore('apiKey', {
       this.error = null
 
       try {
-        const [infoResponse, usersResponse, statsResponse] = await Promise.all([
+        const [
+          infoResponse,
+          usersResponse,
+          statsResponse,
+          hourlyStatsResponse,
+        ] = await Promise.all([
           useAuthFetch<ApiResponse<ApiKeyState['apiKeyInfo']>>(
             `/proxy/api-keys/${apiKeyId}/info`
           ),
@@ -31,6 +37,9 @@ export const useApiKeyStore = defineStore('apiKey', {
           ),
           useAuthFetch<ApiResponse<ApiKeyState['statistics']>>(
             `/proxy/api-keys/${apiKeyId}/statistics`
+          ),
+          useAuthFetch<ApiResponse<HourlyStats>>(
+            `/proxy/api-keys/${apiKeyId}/hourly-stats`
           ),
         ])
 
@@ -46,9 +55,17 @@ export const useApiKeyStore = defineStore('apiKey', {
           throw new Error('Failed to fetch API key statistics')
         }
 
+        if (
+          hourlyStatsResponse.error.value ||
+          !hourlyStatsResponse.data.value?.success
+        ) {
+          throw new Error('Failed to fetch hourly stats')
+        }
+
         this.apiKeyInfo = infoResponse.data.value.data
         this.users = usersResponse.data.value.data
         this.statistics = statsResponse.data.value.data
+        this.hourlyStats = hourlyStatsResponse.data.value.data
       } catch (err) {
         const fetchError = err as FetchError<{ message: string }>
         this.error = fetchError.data?.message || 'Failed to fetch API key data'
@@ -64,6 +81,7 @@ export const useApiKeyStore = defineStore('apiKey', {
       this.apiKeyInfo = null
       this.users = null
       this.statistics = null
+      this.hourlyStats = null
     },
   },
 })

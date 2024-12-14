@@ -57,10 +57,36 @@ export interface ApiKeyInfo {
   botId?: string
 }
 
+export interface HourlyStatsData {
+  hour: number
+  time: string
+  tokenUsed: number
+  chatsStarted: number
+  messagesSent: number
+  messagesFromBot: number
+  messagesFromUser: number
+  requestsCount: number
+}
+
+export interface HourlyStats {
+  startTime: string
+  endTime: string
+  hours: HourlyStatsData[]
+  totals: {
+    tokenUsed: number
+    chatsStarted: number
+    messagesSent: number
+    messagesFromBot: number
+    messagesFromUser: number
+    requestsCount: number
+  }
+}
+
 export interface ApiKeyState {
   isLoading: boolean
   error: string | null
   apiKeyInfo: ApiKeyInfo | null
   users: ApiKeyUsers | null
   statistics: ApiKeyStatistics | null
+  hourlyStats: HourlyStats | null
 }
