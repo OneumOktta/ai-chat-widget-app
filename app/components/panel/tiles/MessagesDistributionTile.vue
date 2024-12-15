@@ -53,7 +53,7 @@
     <h3 class="mb-4 text-xl font-bold text-light-text dark:text-dark-text">
       Распределение сообщений
     </h3>
-    <div class="h-[302px]">
+    <div class="h-48">
       <Doughnut
         v-if="chartData"
         :data="chartData"

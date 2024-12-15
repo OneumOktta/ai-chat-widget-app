@@ -9,7 +9,7 @@
 </script>
 
 <template>
-  <div class="flex h-full cursor-pointer items-center py-4 pl-8">
+  <div class="flex h-full cursor-pointer items-center pl-8">
     <div
       class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-paleViolet"
     >

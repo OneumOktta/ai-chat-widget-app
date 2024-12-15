@@ -9,7 +9,8 @@
 
     return {
       owner: data.owner,
-      managers: data.managers.slice(0, 3),
+      totalManagers: data.managers.length,
+      activeManagers: data.managers.filter((m) => m.isActive).length,
     }
   })
 </script>
@@ -42,29 +43,32 @@
         </div>
       </div>
 
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-4">
         <span
           class="text-sm font-medium text-light-text/60 dark:text-dark-text/60"
         >
           Менеджеры
         </span>
-        <div class="flex flex-col gap-3">
-          <div
-            v-for="manager in users.managers"
-            :key="manager.id"
-            class="flex items-center gap-3"
-          >
-            <div class="h-10 w-10 rounded-full bg-paleViolet/50" />
-            <div class="flex flex-col">
-              <span
-                class="text-sm font-medium text-light-text dark:text-dark-text"
-              >
-                {{ manager.name }}
-              </span>
-              <span class="text-xs text-light-text/60 dark:text-dark-text/60">
-                {{ manager.email }}
-              </span>
-            </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1">
+            <span
+              class="text-3xl font-medium text-light-text dark:text-dark-text"
+            >
+              {{ users.totalManagers }}
+            </span>
+            <span class="text-xs text-light-text/60 dark:text-dark-text/60">
+              Всего
+            </span>
+          </div>
+          <div class="flex flex-col gap-1">
+            <span
+              class="text-3xl font-medium text-light-text dark:text-dark-text"
+            >
+              {{ users.activeManagers }}
+            </span>
+            <span class="text-xs text-light-text/60 dark:text-dark-text/60">
+              Активных
+            </span>
           </div>
         </div>
       </div>

@@ -8,7 +8,7 @@
 
 <template>
   <div
-    class="flex h-full cursor-pointer items-center py-4 pl-8"
+    class="flex h-full cursor-pointer items-center pl-8"
     @click="navigateToEducation"
   >
     <div

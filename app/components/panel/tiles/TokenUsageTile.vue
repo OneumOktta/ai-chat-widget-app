@@ -70,7 +70,7 @@
     <h3 class="mb-4 text-xl font-bold text-light-text dark:text-dark-text">
       Использование токенов
     </h3>
-    <div class="h-[392px]">
+    <div class="h-48">
       <Bar
         v-if="chartData"
         :data="chartData"
