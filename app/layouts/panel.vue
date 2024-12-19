@@ -14,12 +14,16 @@
     <div
       class="col-span-full row-start-2 grid grid-cols-[auto_1fr] gap-2 overflow-hidden sm:gap-3 md:gap-4 lg:gap-4"
     >
-      <aside class="col-start-1 h-full">
+      <aside class="col-start-1 h-[calc(100vh-theme(spacing.24))] lg:h-full">
         <PanelSidebar />
       </aside>
 
-      <main class="col-start-2 overflow-hidden">
-        <slot />
+      <main class="col-start-2 min-w-0">
+        <div
+          class="h-[calc(100vh-theme(spacing.24))] overflow-auto [-ms-overflow-style:none] [scrollbar-width:none] lg:h-full [&::-webkit-scrollbar]:hidden"
+        >
+          <slot />
+        </div>
       </main>
     </div>
   </div>

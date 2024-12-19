@@ -5,7 +5,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return
   }
 
-  if (to.path === '/panel/login') {
+  if (to.path === '/login') {
     const accessToken = localStorage.getItem('accessToken')
     if (accessToken) {
       try {
