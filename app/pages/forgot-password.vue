@@ -4,10 +4,6 @@
   import { z } from 'zod'
   import { translateError } from '~/schemas/auth.schema'
 
-  definePageMeta({
-    layout: 'auth',
-  })
-
   const email = ref('')
   const loading = ref(false)
   const error = ref<string | null>(null)

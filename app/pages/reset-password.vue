@@ -4,10 +4,6 @@
   import { z } from 'zod'
   import { resetPasswordSchema } from '~/schemas/auth.schema'
 
-  definePageMeta({
-    layout: 'auth',
-  })
-
   const route = useRoute()
   const router = useRouter()
 

@@ -2,10 +2,6 @@
   import { useAuthStore } from '~/stores/auth.store'
   import type { LoginCredentials } from '~/types/auth.types'
 
-  definePageMeta({
-    middleware: ['panel'],
-  })
-
   const auth = useAuthStore()
   const router = useRouter()
 
@@ -23,7 +19,7 @@
         router.push('/panel')
       }
     } catch (error) {
-      // Ошибка уже обработана в сторе
+      // Ошибка обработана в сторе
     }
   }
 </script>

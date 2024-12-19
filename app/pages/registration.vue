@@ -5,10 +5,6 @@
   import { useAuthStore } from '~/stores/auth.store'
   import type { RegisterCredentials } from '~/types/auth.types'
 
-  definePageMeta({
-    layout: 'auth',
-  })
-
   const auth = useAuthStore()
   const router = useRouter()
 

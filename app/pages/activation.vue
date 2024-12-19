@@ -3,10 +3,6 @@
   import { z } from 'zod'
   import { resendActivationSchema, translateError } from '~/schemas/auth.schema'
 
-  definePageMeta({
-    layout: 'auth',
-  })
-
   const route = useRoute()
   const router = useRouter()
   const loading = ref(true)
