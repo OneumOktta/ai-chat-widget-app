@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import type { MaybeElementRef } from '@vueuse/core'
   import { onClickOutside } from '@vueuse/core'
   import { ref } from 'vue'
   import type { PanelLink } from '~/constants/panel-navigation'
@@ -8,7 +9,9 @@
     panelNavigationUp,
   } from '~/constants/panel-navigation'
   const isSupportDropdownOpen = ref(false)
+  const isNotificationsPanelOpen = ref(false)
   const supportMenuRef = ref(null)
+  const notificationsPanelRef = ref(null)
   const handleLinkClick = (event: Event, link: PanelLink) => {
     if (link.isDropdown) {
       event.preventDefault()
@@ -16,9 +19,16 @@
       isSupportDropdownOpen.value = !isSupportDropdownOpen.value
     }
   }
-  onClickOutside(supportMenuRef, () => {
-    isSupportDropdownOpen.value = false
-  })
+  const toggleNotifications = () => {
+    isNotificationsPanelOpen.value = !isNotificationsPanelOpen.value
+  }
+  onClickOutside(
+    [supportMenuRef, notificationsPanelRef] as MaybeElementRef[],
+    () => {
+      isSupportDropdownOpen.value = false
+      isNotificationsPanelOpen.value = false
+    }
+  )
 </script>
 
 <template>
@@ -39,19 +49,34 @@
       <nav
         class="flex flex-row items-center justify-between gap-2 sm:gap-4 lg:hidden"
       >
-        <SidebarLink
-          v-for="link in panelNavigationMobile"
-          :key="link.to"
-          v-bind="link"
-          @click="(e) => handleLinkClick(e, link)"
-        />
+        <template v-for="link in panelNavigationMobile" :key="link.to">
+          <SidebarLink
+            v-if="link.to !== '/panel/notifications'"
+            v-bind="link"
+            @click="(e) => handleLinkClick(e, link)"
+          />
+          <NotificationsButton
+            v-else
+            :is-active="isNotificationsPanelOpen"
+            @click="toggleNotifications"
+          />
+        </template>
       </nav>
 
       <div class="hidden flex-1 lg:block"></div>
 
       <nav class="hidden lg:flex lg:flex-col lg:gap-4">
         <template v-for="link in panelNavigationDown" :key="link.to">
-          <SidebarLink v-if="!link.isDropdown" v-bind="link" />
+          <SidebarLink
+            v-if="!link.isDropdown && link.to !== '/panel/notifications'"
+            v-bind="link"
+            @click="(e) => handleLinkClick(e, link)"
+          />
+          <NotificationsButton
+            v-else-if="link.to === '/panel/notifications'"
+            :is-active="isNotificationsPanelOpen"
+            @click="toggleNotifications"
+          />
           <SupportButton
             v-else
             :icon="link.icon"
@@ -67,6 +92,12 @@
         />
       </nav>
     </div>
+
+    <NotificationsPanel
+      ref="notificationsPanelRef"
+      :is-open="isNotificationsPanelOpen"
+      @close="isNotificationsPanelOpen = false"
+    />
   </aside>
 </template>
 
