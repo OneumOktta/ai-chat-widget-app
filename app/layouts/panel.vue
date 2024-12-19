@@ -5,14 +5,14 @@
 
 <template>
   <div
-    class="grid h-screen grid-cols-1 grid-rows-[auto_1fr] gap-4 overflow-hidden p-6"
+    class="grid h-screen grid-cols-1 grid-rows-[auto_1fr] gap-2 overflow-hidden p-2 sm:gap-3 sm:p-3 md:gap-4 md:p-4 lg:gap-4 lg:p-6"
   >
     <header class="col-span-full row-start-1">
       <PanelHeader />
     </header>
 
     <div
-      class="col-span-full row-start-2 grid grid-cols-[auto_1fr] gap-4 overflow-hidden"
+      class="col-span-full row-start-2 grid grid-cols-[auto_1fr] gap-2 overflow-hidden sm:gap-3 md:gap-4 lg:gap-4"
     >
       <aside class="col-start-1 h-full">
         <PanelSidebar />

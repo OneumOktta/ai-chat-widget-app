@@ -1,86 +1,101 @@
 <script setup lang="ts">
   import { ref } from 'vue'
+  import type { PanelLink } from '~/constants/panel-navigation'
   import {
     panelNavigationDown,
+    panelNavigationMobile,
     panelNavigationUp,
   } from '~/constants/panel-navigation'
   // Состояние для выпадающего списка "Поддержка"
   const isSupportDropdownOpen = ref(false)
   // Функция для переключения состояния выпадающего списка
-  const toggleSupportDropdown = () => {
-    isSupportDropdownOpen.value = !isSupportDropdownOpen.value
+  const handleLinkClick = (event: Event, link: PanelLink) => {
+    if (link.isDropdown) {
+      event.preventDefault()
+      isSupportDropdownOpen.value = !isSupportDropdownOpen.value
+    }
   }
 </script>
 
 <template>
-  <aside class="h-full w-[100px]">
-    <div class="h-full rounded-2xl bg-light-panels dark:bg-dark-panels">
-      <div class="flex h-full flex-col py-4">
-        <!-- Верхние ссылки -->
-        <nav class="flex flex-none flex-col gap-4">
-          <SidebarLink
-            v-for="link in panelNavigationUp"
-            :key="link.to"
-            v-bind="link"
-          />
-        </nav>
+  <aside
+    class="fixed bottom-2 left-2 right-2 z-50 h-16 rounded-2xl bg-light-panels dark:bg-dark-panels sm:bottom-3 sm:left-3 sm:right-3 md:bottom-4 md:left-4 md:right-4 lg:static lg:h-full lg:w-[100px]"
+  >
+    <div
+      class="flex h-full flex-row justify-around px-2 sm:px-4 md:px-6 lg:flex-col lg:justify-start lg:px-0 lg:py-4"
+    >
+      <nav class="hidden lg:flex lg:flex-col lg:gap-4">
+        <SidebarLink
+          v-for="link in panelNavigationUp"
+          :key="link.to"
+          v-bind="link"
+        />
+      </nav>
 
-        <div class="flex-1"></div>
+      <nav
+        class="flex flex-row items-center justify-between gap-2 sm:gap-4 lg:hidden"
+      >
+        <SidebarLink
+          v-for="link in panelNavigationMobile"
+          :key="link.to"
+          v-bind="link"
+          @click="(e) => handleLinkClick(e, link)"
+        />
+      </nav>
 
-        <!-- Нижние ссылки -->
-        <nav class="relative flex flex-none flex-col gap-4">
-          <SidebarLink
-            v-for="link in panelNavigationDown"
-            :key="link.to"
-            v-bind="link"
-            @click="link.to === '/panel/support' && toggleSupportDropdown()"
-          />
+      <div class="hidden flex-1 lg:block"></div>
 
-          <!-- Выпадающий список для "Поддержка" -->
-          <div
-            v-if="isSupportDropdownOpen"
-            class="absolute bottom-0 left-[115px] z-10 h-[276px] w-[448px] rounded-lg border border-gray-300 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-800"
-          >
-            <ul class="flex h-full flex-col justify-between gap-2">
-              <li
-                class="w-full px-4 py-2 hover:rounded-lg hover:border hover:border-purple-300 hover:bg-purple-200"
+      <nav class="hidden lg:flex lg:flex-col lg:gap-4">
+        <SidebarLink
+          v-for="link in panelNavigationDown"
+          :key="link.to"
+          v-bind="link"
+          @click="(e) => handleLinkClick(e, link)"
+        />
+
+        <div
+          v-if="isSupportDropdownOpen"
+          class="absolute bottom-0 left-[115px] h-[276px] w-[448px] rounded-lg border border-gray-300 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-800"
+        >
+          <ul class="flex h-full flex-col justify-between gap-2">
+            <li
+              class="w-full px-4 py-2 hover:rounded-lg hover:border hover:border-purple-300 hover:bg-purple-200"
+            >
+              <NuxtLink
+                to="/panel/support"
+                class="text-lg text-gray-700 dark:text-gray-300"
               >
-                <NuxtLink
-                  to="/panel/support"
-                  class="text-lg text-gray-700 dark:text-gray-300"
-                >
-                  Справочный центр
-                </NuxtLink>
-              </li>
-              <li
-                class="w-full px-4 py-2 hover:rounded-lg hover:border hover:border-purple-300 hover:bg-purple-200"
-              >
-                <a href="#" class="text-lg text-gray-700 dark:text-gray-300">
-                  Общение в чате
-                </a>
-              </li>
-              <li
-                class="flex w-full justify-between px-4 py-2 hover:rounded-lg hover:border hover:border-purple-300 hover:bg-purple-200"
-              >
-                <a href="#" class="text-lg text-gray-700 dark:text-gray-300">
-                  Виджет поддержки
-                </a>
-                <label class="switch">
-                  <input type="checkbox" checked />
-                  <span class="slider"></span>
-                </label>
-              </li>
-              <li
-                class="w-full px-4 py-2 hover:rounded-lg hover:border hover:border-purple-300 hover:bg-purple-200"
-              >
-                <a href="#" class="text-lg text-gray-700 dark:text-gray-300">
-                  Поделиться отзывом
-                </a>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </div>
+                Справочный центр
+              </NuxtLink>
+            </li>
+            <li
+              class="w-full px-4 py-2 hover:rounded-lg hover:border hover:border-purple-300 hover:bg-purple-200"
+            >
+              <a href="#" class="text-lg text-gray-700 dark:text-gray-300">
+                Общение в чате
+              </a>
+            </li>
+            <li
+              class="flex w-full justify-between px-4 py-2 hover:rounded-lg hover:border hover:border-purple-300 hover:bg-purple-200"
+            >
+              <a href="#" class="text-lg text-gray-700 dark:text-gray-300">
+                Виджет поддержки
+              </a>
+              <label class="switch">
+                <input type="checkbox" checked />
+                <span class="slider"></span>
+              </label>
+            </li>
+            <li
+              class="w-full px-4 py-2 hover:rounded-lg hover:border hover:border-purple-300 hover:bg-purple-200"
+            >
+              <a href="#" class="text-lg text-gray-700 dark:text-gray-300">
+                Поделиться отзывом
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
     </div>
   </aside>
 </template>
@@ -127,7 +142,7 @@
       transform 0.4s,
       box-shadow 0.4s;
   }
-  /* Состояние "включено" */
+  /* Состояниее "включено" */
   input:checked + .slider {
     background: linear-gradient(90deg, #a393fc, #cbb2ff); /* Цветной фон */
   }

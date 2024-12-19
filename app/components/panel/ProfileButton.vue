@@ -62,16 +62,16 @@
 <template>
   <div ref="menuRef" class="relative">
     <button
-      class="flex items-center gap-4 rounded-xl border border-lightBlue px-4 py-2 transition-colors hover:border-lightPink dark:border-dark-text/10"
+      class="flex items-center gap-4 rounded-xl border border-lightBlue px-4 py-2 transition-colors hover:border-lightPink dark:border-dark-text/10 lg:w-auto"
       @click="toggleUserMenu"
     >
       <div
-        class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-lightPink to-lightBlue text-xl font-bold text-white"
+        class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-lightPink to-lightBlue text-lg font-bold text-white lg:h-14 lg:w-14 lg:text-xl"
       >
         {{ roleLetters[panelStore.user?.role as keyof typeof roleLetters] }}
       </div>
 
-      <div class="flex flex-col items-start">
+      <div class="hidden lg:flex lg:flex-col lg:items-start">
         <span class="text-sm font-medium">{{ currentApiKeyTitle }}</span>
         <span class="text-xs text-light-text/60 dark:text-dark-text/60">
           {{ panelStore.user?.email }}
@@ -80,7 +80,7 @@
 
       <Icon
         name="basil:caret-down-outline"
-        class="ml-8 h-4 w-4"
+        class="ml-8 hidden h-4 w-4 lg:block"
         :class="{ 'rotate-180': isUserMenuOpen }"
       />
     </button>
