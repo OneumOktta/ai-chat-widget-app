@@ -21,21 +21,6 @@
 
   const acceptTerms = ref(false)
 
-  const features = [
-    {
-      icon: 'material-symbols-light:task-alt',
-      text: 'Продажи',
-    },
-    {
-      icon: 'material-symbols-light:task-alt',
-      text: 'Поддержка',
-    },
-    {
-      icon: 'material-symbols-light:task-alt',
-      text: 'Повышение качества обслуживания',
-    },
-  ]
-
   const showSuccessModal = ref(false)
 
   const handleRegister = () => {
@@ -64,34 +49,7 @@
 
 <template>
   <div>
-    <div
-      class="mx-auto flex h-full max-w-7xl items-center justify-center gap-40"
-    >
-      <div class="flex-1">
-        <h1 class="mb-10 text-3xl font-bold">
-          Чат для сайта или приложения на основе GPT
-        </h1>
-        <p class="mb-8 text-lg text-light-text dark:text-dark-text">
-          Расширьте свои возможности с помощью автоматизации
-          <br />
-          и искусственного интеллекта в одном окне:
-        </p>
-
-        <div class="space-y-6">
-          <div
-            v-for="feature in features"
-            :key="feature.text"
-            class="flex items-center gap-4"
-          >
-            <Icon
-              :name="feature.icon"
-              class="h-6 w-6 flex-shrink-0 text-lightBlue"
-            />
-            <span class="text-lg">{{ feature.text }}</span>
-          </div>
-        </div>
-      </div>
-
+    <div class="mx-auto w-1/3 min-w-[400px]">
       <div class="flex-1">
         <h2 class="mb-10 text-center text-3xl font-semibold">
           Создайте аккаунт
@@ -164,18 +122,16 @@
                 <p class="mb-4 text-light-text/60 dark:text-dark-text/60">
                   Вы можете зарегистрироваться с помощью:
                 </p>
-                <div class="flex justify-center gap-4">
+                <div class="flex justify-center gap-4 text-dark-text">
                   <button
-                    class="flex items-center gap-2 rounded-xl border-2 border-light-text/10 px-4 py-2 transition-colors hover:border-lightBlue dark:border-dark-text/10"
+                    class="flex items-center gap-2 rounded-full bg-lightBlue px-4 py-4 transition-colors"
                   >
-                    <Icon name="basil:telegram-outline" class="h-5 w-5" />
-                    <span>Telegram</span>
+                    <Icon name="basil:vk-solid" class="h-6 w-6" />
                   </button>
                   <button
-                    class="flex items-center gap-2 rounded-xl border-2 border-light-text/10 px-4 py-2 transition-colors hover:border-lightBlue dark:border-dark-text/10"
+                    class="flex items-center gap-2 rounded-full bg-lightBlue px-4 py-4 transition-colors"
                   >
-                    <Icon name="basil:vk-outline" class="h-5 w-5" />
-                    <span>VKontakte</span>
+                    <Icon name="basil:telegram-solid" class="h-6 w-6" />
                   </button>
                 </div>
               </div>
@@ -184,7 +140,7 @@
                 <p class="text-light-text/60 dark:text-dark-text/60">
                   У вас уже есть аккаунт?
                   <NuxtLink
-                    to="/panel/login"
+                    to="/login"
                     class="text-lightPink transition-colors hover:text-lightBlue"
                   >
                     Вход

@@ -3,7 +3,6 @@
   import type { LoginCredentials } from '~/types/auth.types'
 
   definePageMeta({
-    layout: 'auth',
     middleware: ['panel'],
   })
 
@@ -54,8 +53,6 @@
       />
 
       <div class="flex items-center justify-between">
-        <BaseCheckbox v-model="rememberMe">Запомнить меня</BaseCheckbox>
-
         <NuxtLink
           to="/forgot-password"
           class="text-lightPink transition-colors hover:text-lightBlue"
@@ -77,18 +74,16 @@
           <p class="mb-4 text-light-text/60 dark:text-dark-text/60">
             Вы можете войти с помощью:
           </p>
-          <div class="flex justify-center gap-4">
+          <div class="flex justify-center gap-4 text-dark-text">
             <button
-              class="flex items-center gap-2 rounded-xl border-2 border-light-text/10 px-4 py-2 transition-colors hover:border-lightBlue dark:border-dark-text/10"
+              class="flex items-center gap-2 rounded-full bg-lightBlue px-4 py-4 transition-colors"
             >
-              <Icon name="basil:telegram-outline" class="h-5 w-5" />
-              <span>Telegram</span>
+              <Icon name="basil:vk-solid" class="h-6 w-6" />
             </button>
             <button
-              class="flex items-center gap-2 rounded-xl border-2 border-light-text/10 px-4 py-2 transition-colors hover:border-lightBlue dark:border-dark-text/10"
+              class="flex items-center gap-2 rounded-full bg-lightBlue px-4 py-4 transition-colors"
             >
-              <Icon name="basil:vk-outline" class="h-5 w-5" />
-              <span>VKontakte</span>
+              <Icon name="basil:telegram-solid" class="h-6 w-6" />
             </button>
           </div>
         </div>

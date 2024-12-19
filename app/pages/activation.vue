@@ -65,7 +65,7 @@
         resendSuccess.value = true
         showResendForm.value = false
         setTimeout(() => {
-          router.push('/panel/login')
+          router.push('/login')
         }, 2000)
       }
     } catch (err) {

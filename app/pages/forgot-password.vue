@@ -87,7 +87,7 @@
           <p class="text-light-text/60 dark:text-dark-text/60">
             Вспомнили пароль?
             <NuxtLink
-              to="/panel/login"
+              to="/login"
               class="text-lightPink transition-colors hover:text-lightBlue"
             >
               Вход
