@@ -52,7 +52,7 @@ export const panelNavigationDown: PanelLink[] = [
   {
     icon: 'lets-icons:headphones-fill-light',
     text: 'Поддержка',
-    to: '#',
+    to: '/panel/support',
     isDropdown: true,
   },
   {

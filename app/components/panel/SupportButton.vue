@@ -1,32 +1,18 @@
 <script setup lang="ts">
-  interface Props {
+  const props = defineProps<{
     icon: string
     text: string
-    to: string
-    roles?: string[] // массив ролей, которым доступна ссылка
-  }
+  }>()
 
-  const props = defineProps<Props>()
   const route = useRoute()
 
   const isActive = computed(() => {
-    if (props.to === '/panel') {
-      return route.path === '/panel'
-    }
-    if (props.to === '/panel/support') {
-      return route.path.startsWith('/panel/support')
-    }
-    return route.path.startsWith(props.to)
+    return route.path.startsWith('/panel/support')
   })
-
-  // TODO: Добавить проверку роли пользователя
-  const userHasAccess = computed(() => true) // временно всегда true
 </script>
 
 <template>
-  <NuxtLink
-    v-if="userHasAccess"
-    :to="to"
+  <button
     class="group relative mx-auto flex h-12 w-12 flex-col items-center justify-center rounded-2xl sm:h-14 sm:w-14 lg:h-[64px] lg:w-[92px] lg:justify-start lg:py-2"
   >
     <div
@@ -48,14 +34,5 @@
     >
       {{ text }}
     </span>
-  </NuxtLink>
+  </button>
 </template>
-
-<style scoped>
-  /* Добавляем стили для активного состояния на мобильных */
-  @media (max-width: 1023px) {
-    .router-link-active .icon {
-      @apply text-lightPink;
-    }
-  }
-</style>
