@@ -30,7 +30,7 @@
         </span>
       </div>
       <label class="switch">
-        <input type="checkbox" v-model="isActive" />
+        <input v-model="isActive" type="checkbox" />
         <span class="slider" />
       </label>
     </div>

@@ -9,21 +9,21 @@
       name: 'Вконтакте',
       username: 'Бешеная Лама',
       apiKey: '',
-      icon: 'logos:vk',
+      icon: 'ion:logo-vk',
     },
     {
       id: 'whatsapp',
       name: 'WhatsApp',
       username: 'Бешеная Лама',
       apiKey: '',
-      icon: 'logos:whatsapp',
+      icon: 'ic:baseline-whatsapp',
     },
     {
       id: 'telegram',
       name: 'Telegram',
       username: 'Бешеная Лама',
       apiKey: '',
-      icon: 'logos:telegram',
+      icon: 'ri:telegram-2-fill',
     },
   ]
 
@@ -31,17 +31,17 @@
     {
       id: 'vk',
       name: 'Вконтакте',
-      icon: 'logos:vk',
+      icon: 'ion:logo-vk',
     },
     {
       id: 'whatsapp',
       name: 'WhatsApp',
-      icon: 'logos:whatsapp',
+      icon: 'ic:baseline-whatsapp',
     },
     {
       id: 'telegram',
       name: 'Telegram',
-      icon: 'logos:telegram',
+      icon: 'ri:telegram-2-fill',
     },
   ]
 </script>
