@@ -2,7 +2,7 @@
 
 <template>
   <div
-    class="flex max-h-screen flex-col items-center justify-center space-y-10 p-4"
+    class="flex max-h-screen flex-col items-center justify-center space-y-10 px-4"
   >
     <div class="max-w-3xl text-center">
       <h1

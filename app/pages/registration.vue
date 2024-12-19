@@ -44,7 +44,9 @@
 </script>
 
 <template>
-  <div class="mx-auto w-1/3 min-w-[400px]">
+  <div
+    class="mx-auto w-full max-w-[400px] px-4 sm:max-w-[450px] sm:px-0 md:max-w-[500px] lg:max-w-[550px]"
+  >
     <h2 class="mb-10 text-center text-3xl font-semibold">Создайте аккаунт</h2>
 
     <form class="space-y-4" novalidate @submit.prevent>
@@ -139,7 +141,6 @@
       </div>
     </form>
 
-    <!-- Модальное окно успешной регистрации -->
     <div
       v-if="showSuccessModal"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
@@ -155,7 +156,7 @@
         <p class="mb-6 text-center text-light-text/60 dark:text-dark-text/60">
           На ваш email отправлена ссылка для активации аккаунта.
         </p>
-        <GradientButton class="w-full" @click="router.push('/panel/login')">
+        <GradientButton class="w-full" @click="router.push('/login')">
           Перейти к входу
         </GradientButton>
       </div>

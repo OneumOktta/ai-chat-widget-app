@@ -82,7 +82,7 @@
 <template>
   <div class="flex items-center justify-center px-4">
     <div
-      class="w-full max-w-md rounded-2xl bg-light-background p-8 dark:bg-dark-background"
+      class="w-full max-w-[400px] rounded-2xl bg-light-background p-8 dark:bg-dark-background sm:max-w-[450px] md:max-w-[500px] lg:max-w-[550px]"
     >
       <template v-if="loading">
         <div class="text-center">
@@ -158,7 +158,7 @@
           <p class="mb-6 text-light-text/60 dark:text-dark-text/60">
             Теперь вы можете войти в систему
           </p>
-          <GradientButton class="w-full" @click="router.push('/panel/login')">
+          <GradientButton class="w-full" @click="router.push('/login')">
             Перейти ко входу
           </GradientButton>
         </div>

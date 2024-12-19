@@ -25,8 +25,10 @@
 </script>
 
 <template>
-  <div class="mx-auto w-1/3 min-w-[400px]">
-    <h1 class="mb-10 text-center text-3xl font-semibold">
+  <div
+    class="mx-auto w-full max-w-[400px] px-4 sm:max-w-[450px] sm:px-0 md:max-w-[500px] lg:max-w-[550px]"
+  >
+    <h1 class="mb-10 text-center text-2xl font-semibold sm:text-3xl">
       Рады видеть вас снова!
     </h1>
 

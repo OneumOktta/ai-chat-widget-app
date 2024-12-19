@@ -41,7 +41,7 @@ export function useAuthFetch<T>(url: string, options: UseFetchOptions<T> = {}) {
             }
           } catch {
             localStorage.removeItem('accessToken')
-            navigateTo('/panel/login')
+            navigateTo('/login')
           }
         }
       }
