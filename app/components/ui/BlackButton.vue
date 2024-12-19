@@ -8,7 +8,7 @@
   <component
     :is="to ? 'NuxtLink' : 'button'"
     :to="to"
-    class="group relative cursor-pointer rounded-2xl border-2 border-transparent bg-greyDark px-6 py-4 text-dark-text shadow-lg transition-all duration-300 hover:shadow-xl dark:border-2 dark:border-lightPink"
+    class="group relative cursor-pointer rounded-2xl border border-lightBlue bg-transparent px-6 py-4 text-lightBlue transition-all duration-300 hover:shadow-xl dark:border-2 dark:border-lightPink dark:text-lightPink"
   >
     <slot />
     <div
