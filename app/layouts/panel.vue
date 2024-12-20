@@ -1,8 +1,23 @@
 <script setup lang="ts">
   import PanelHeader from '~/components/panel/PanelHeader.vue'
   import PanelSidebar from '~/components/panel/PanelSidebar.vue'
+  import { useApiKeyStore } from '~/stores/apiKey.store'
+  import { usePanelStore } from '~/stores/panel.store'
+
   definePageMeta({
     middleware: ['panel'],
+  })
+
+  const panelStore = usePanelStore()
+  const apiKeyStore = useApiKeyStore()
+
+  // Инициализация при монтировании
+  onMounted(async () => {
+    await panelStore.fetchUserData()
+    // Если есть текущий ключ, загружаем его данные
+    if (panelStore.currentApiKey) {
+      await apiKeyStore.fetchApiKeyData(panelStore.currentApiKey)
+    }
   })
 </script>
 

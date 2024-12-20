@@ -2,12 +2,28 @@
   import ChatPreview from '~/components/panel/ChatPreview.vue'
   import CreateBot from '~/components/panel/CreateBot.vue'
   import { useApiKeyStore } from '~/stores/apiKey.store'
+  import { usePanelStore } from '~/stores/panel.store'
 
   definePageMeta({
     layout: 'panel',
   })
 
   const apiKeyStore = useApiKeyStore()
+  const panelStore = usePanelStore()
+
+  // Состояние загрузки
+  const isLoading = computed(
+    () => apiKeyStore.isLoading || panelStore.isLoading
+  )
+
+  // Ждем загрузку данных перед отображением
+  await Promise.all([
+    panelStore.fetchUserData(),
+    panelStore.currentApiKey
+      ? apiKeyStore.fetchApiKeyData(panelStore.currentApiKey)
+      : Promise.resolve(),
+  ])
+
   const tabs = [
     { id: 'description', name: 'Описание' },
     { id: 'appearance', name: 'Внешний вид' },
@@ -302,7 +318,7 @@
     return grouped
   })
 
-  // Функции для таба обучения
+  // Функции для таб�� обучения
   const fetchTrainingData = async () => {
     try {
       const { data, error } = await useAuthFetch<BotInfoResponse>(
@@ -475,7 +491,11 @@
 </script>
 
 <template>
+  <div v-if="isLoading" class="flex h-full items-center justify-center">
+    <LoadingSpinner />
+  </div>
   <div
+    v-else
     class="flex h-full flex-col rounded-2xl bg-light-panels dark:bg-dark-panels"
   >
     <template v-if="apiKeyStore.apiKeyInfo?.botId">
@@ -726,7 +746,7 @@
             </div>
           </div>
 
-          <div class="sticky top-0">
+          <div class="sticky top-0 w-[460px]">
             <ChatPreview :customization="customization" />
           </div>
         </div>
@@ -858,7 +878,6 @@
     </div>
   </div>
 </template>
-
 <style lang="scss" scoped>
   .group {
     cursor: pointer;
