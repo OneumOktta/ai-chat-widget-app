@@ -38,6 +38,9 @@ const config: Config = {
         'primary-gradient': 'linear-gradient(45deg, #FF6CAB, #7366FF)',
         'primary-gradient-alt': 'linear-gradient(225deg, #FF6CAB, #7366FF)',
       },
+      animation: {
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
     },
     container: {
       center: true,

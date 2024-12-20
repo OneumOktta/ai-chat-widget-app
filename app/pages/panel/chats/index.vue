@@ -1,143 +1,230 @@
 <script setup lang="ts">
+  import { useApiKeyStore } from '~/stores/apiKey.store'
+
   definePageMeta({
     layout: 'panel',
+  })
+
+  interface ChatMessage {
+    id: string
+    content: string
+    role: string
+    createdAt: string
+  }
+
+  interface Chat {
+    id: string
+    title: string
+    mode: string
+    isClosed: boolean
+    createdAt: string
+    updatedAt: string
+    _count: {
+      messages: number
+    }
+  }
+
+  interface ChatListResponse {
+    success: boolean
+    data: {
+      items: Chat[]
+      pagination: {
+        total: number
+        page: number
+        pageSize: number
+        pageCount: number
+      }
+    }
+  }
+
+  interface ChatDetailsResponse {
+    success: boolean
+    data: {
+      id: string
+      title: string
+      mode: string
+      messages: ChatMessage[]
+    }
+  }
+
+  const apiKeyStore = useApiKeyStore()
+  const chats = ref<Chat[]>([])
+  const selectedChat = ref<string | null>(null)
+  const messages = ref<ChatMessage[]>([])
+  const isLoadingChats = ref(false)
+  const isLoadingMessages = ref(false)
+  const searchQuery = ref('')
+
+  // Фильтрация чатов
+  const filteredChats = computed(() => {
+    if (!searchQuery.value) return chats.value
+    const query = searchQuery.value.toLowerCase()
+    return chats.value.filter((chat) =>
+      chat.title.toLowerCase().includes(query)
+    )
+  })
+
+  // Загрузка списка чатов
+  const fetchChats = async () => {
+    if (!apiKeyStore.apiKeyInfo?.id) return
+
+    isLoadingChats.value = true
+    try {
+      const { data, error } = await useAuthFetch<ChatListResponse>(
+        `/proxy/chats/list?apiKeyId=${apiKeyStore.apiKeyInfo.id}`
+      )
+      if (error.value) throw new Error('Failed to fetch chats')
+      if (data.value?.success) {
+        chats.value = data.value.data.items
+        if (chats.value.length > 0 && !selectedChat.value) {
+          selectedChat.value = chats.value[0].id
+          await fetchMessages(chats.value[0].id)
+        }
+      }
+    } catch (e) {
+      console.error('Error fetching chats:', e)
+    } finally {
+      isLoadingChats.value = false
+    }
+  }
+
+  // Загрузка сообщений выбранного чата
+  const fetchMessages = async (chatId: string) => {
+    isLoadingMessages.value = true
+    try {
+      const { data, error } = await useAuthFetch<ChatDetailsResponse>(
+        `/proxy/chats/${chatId}/messages`
+      )
+      if (error.value) throw new Error('Failed to fetch messages')
+      if (data.value?.success) {
+        messages.value = data.value.data.messages
+      }
+    } catch (e) {
+      console.error('Error fetching messages:', e)
+    } finally {
+      isLoadingMessages.value = false
+    }
+  }
+
+  // Выбор чата
+  const selectChat = async (chatId: string) => {
+    selectedChat.value = chatId
+    await fetchMessages(chatId)
+  }
+
+  // Форматирование даты
+  const formatDate = (date: string) => {
+    return new Date(date).toLocaleString('ru-RU', {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  }
+
+  onMounted(() => {
+    fetchChats()
   })
 </script>
 
 <template>
-  <PanelContent>
-    <div class="flex h-screen bg-gray-100">
-      <!-- Sidebar - Chat List -->
-      <div class="w-1/4 border-r border-gray-200 bg-white">
-        <!-- Search -->
-        <div class="border-b border-gray-200 p-4">
+  <div class="h-[calc(100vh-4rem)] bg-light-background dark:bg-dark-background">
+    <div class="flex h-full">
+      <!-- Список чатов -->
+      <div
+        class="w-80 border-r border-light-text/5 bg-light-panels dark:border-dark-text/5 dark:bg-dark-panels"
+      >
+        <!-- Поиск -->
+        <div class="border-b border-light-text/5 p-4 dark:border-dark-text/5">
           <div class="relative">
             <input
+              v-model="searchQuery"
               type="text"
-              placeholder="Search chats..."
-              class="w-full rounded-lg bg-gray-100 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Поиск чатов..."
+              class="w-full rounded-xl border border-light-text/10 bg-transparent px-4 py-2 text-sm text-light-text outline-none transition-colors placeholder:text-light-text/40 focus:border-lightPink dark:border-dark-text/10 dark:text-dark-text dark:placeholder:text-dark-text/40"
             />
-            <span class="absolute right-3 top-2.5 text-gray-400">
-              <svg
-                class="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </span>
+            <Icon
+              name="heroicons:magnifying-glass"
+              class="absolute right-3 top-2.5 h-5 w-5 text-light-text/40 dark:text-dark-text/40"
+            />
           </div>
         </div>
 
-        <!-- Chat List -->
-        <div class="h-[calc(100vh-5rem)] overflow-y-auto">
+        <!-- Список -->
+        <div class="h-[calc(100vh-8rem)] overflow-y-auto">
           <div
-            v-for="i in 5"
-            :key="i"
-            class="cursor-pointer border-b border-gray-200 p-4 hover:bg-gray-50"
+            v-for="chat in filteredChats"
+            :key="chat.id"
+            class="cursor-pointer border-b border-light-text/5 p-4 transition-colors hover:bg-light-text/5 dark:border-dark-text/5 dark:hover:bg-dark-text/5"
+            :class="
+              selectedChat === chat.id
+                ? 'bg-light-text/5 dark:bg-dark-text/5'
+                : ''
+            "
+            @click="selectChat(chat.id)"
           >
-            <div class="flex items-center space-x-3">
-              <div class="h-12 w-12 rounded-full bg-gray-300"></div>
+            <div class="flex items-center justify-between">
               <div class="flex-1">
-                <h3 class="text-sm font-semibold text-gray-900">
-                  User Name {{ i }}
+                <h3
+                  class="mb-1 text-sm font-medium text-light-text dark:text-dark-text"
+                >
+                  {{ chat.title }}
                 </h3>
-                <p class="truncate text-sm text-gray-500">
-                  Latest message preview...
-                </p>
+                <div
+                  class="flex items-center gap-2 text-xs text-light-text/40 dark:text-dark-text/40"
+                >
+                  <span>{{ formatDate(chat.updatedAt) }}</span>
+                  <span>·</span>
+                  <span>{{ chat._count.messages }} сообщ.</span>
+                </div>
               </div>
-              <div class="text-xs text-gray-400">12:30</div>
+              <div
+                v-if="chat.isClosed"
+                class="rounded-full bg-light-text/10 px-2 py-0.5 text-xs text-light-text/60 dark:bg-dark-text/10 dark:text-dark-text/60"
+              >
+                Закрыт
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Main Chat Area -->
-      <div class="flex flex-1 flex-col">
-        <!-- Chat Header -->
-        <div class="border-b border-gray-200 bg-white p-4">
-          <div class="flex items-center space-x-3">
-            <div class="h-10 w-10 rounded-full bg-gray-300"></div>
-            <div>
-              <h2 class="text-lg font-semibold">Selected User</h2>
-              <p class="text-sm text-gray-500">Online</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Messages Area -->
-        <div class="flex-1 space-y-4 overflow-y-auto p-4">
-          <div
-            v-for="i in 5"
-            :key="i"
-            :class="i % 2 === 0 ? 'flex justify-end' : 'flex justify-start'"
-          >
+      <!-- Область сообщений -->
+      <div class="flex flex-1 flex-col bg-light-panels dark:bg-dark-panels">
+        <div v-if="selectedChat" class="flex-1">
+          <!-- Сообщения -->
+          <div class="h-[calc(100vh-8rem)] space-y-4 overflow-y-auto p-4">
             <div
-              :class="
-                i % 2 === 0
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 text-gray-800'
-              "
-              class="max-w-[70%] rounded-lg p-3"
+              v-for="message in messages"
+              :key="message.id"
+              class="flex"
+              :class="message.role === 'user' ? 'justify-end' : 'justify-start'"
             >
-              <p class="text-sm">
-                This is a sample message that might be quite long to test the
-                layout and wrapping of text in our chat bubbles.
-              </p>
-              <span class="mt-1 block text-xs opacity-75">12:{{ i }}0 PM</span>
+              <div
+                class="max-w-[70%] space-y-1 rounded-xl px-4 py-2"
+                :class="[
+                  message.role === 'user'
+                    ? 'bg-lightPink text-white'
+                    : 'bg-light-text/5 text-light-text dark:bg-dark-text/5 dark:text-dark-text',
+                ]"
+              >
+                <div class="whitespace-pre-wrap text-sm">
+                  {{ message.content }}
+                </div>
+                <div class="text-xs opacity-60">
+                  {{ formatDate(message.createdAt) }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Message Input -->
-        <div class="border-t border-gray-200 bg-white p-4">
-          <div class="flex items-center space-x-2">
-            <button class="rounded-full p-2 hover:bg-gray-100">
-              <svg
-                class="h-6 w-6 text-gray-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
-                />
-              </svg>
-            </button>
-            <input
-              type="text"
-              placeholder="Type your message..."
-              class="flex-1 rounded-full bg-gray-100 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              class="rounded-full bg-blue-500 p-2 text-white hover:bg-blue-600"
-            >
-              <svg
-                class="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                />
-              </svg>
-            </button>
-          </div>
+        <!-- Заглушка при отсутствии выбранного чата -->
+        <div
+          v-else
+          class="flex h-full items-center justify-center text-light-text/40 dark:text-dark-text/40"
+        >
+          Выберите чат для просмотра сообщений
         </div>
       </div>
     </div>
-  </PanelContent>
+  </div>
 </template>

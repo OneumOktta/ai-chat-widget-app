@@ -3,7 +3,9 @@
   import ProfileButton from '~/components/panel/ProfileButton.vue'
   import { useClickOutside } from '~/composables/useClickOutside'
   import { useApiKeyStore } from '~/stores/apiKey.store'
+  import { usePanelStore } from '~/stores/panel.store'
 
+  const panelStore = usePanelStore()
   const apiKeyStore = useApiKeyStore()
   const isInfoMenuOpen = ref(false)
   const menuRef = ref<HTMLElement | null>(null)
@@ -50,7 +52,10 @@
       </div>
 
       <div class="hidden items-center lg:flex">
-        <div class="flex flex-col gap-1 text-base">
+        <div
+          v-if="panelStore.apiKeys.length"
+          class="flex flex-col gap-1 text-base"
+        >
           <div class="text-light-text dark:text-dark-text">
             Количество токенов:
             <span class="font-medium">
@@ -71,6 +76,7 @@
 
       <div ref="menuRef" class="flex items-center gap-2 sm:gap-4 lg:hidden">
         <button
+          v-if="panelStore.apiKeys.length"
           class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-lightPink to-lightBlue text-white sm:h-10 sm:w-10"
           @click="toggleInfoMenu"
         >
@@ -81,13 +87,13 @@
         </button>
 
         <div
-          v-if="isInfoMenuOpen"
+          v-if="isInfoMenuOpen && panelStore.apiKeys.length"
           class="absolute right-2 top-16 z-50 w-[280px] rounded-xl border border-light-text/10 bg-light-panels p-3 shadow-lg dark:border-dark-text/10 dark:bg-dark-panels sm:right-4 sm:top-20 sm:w-[300px] sm:p-4"
         >
           <div class="space-y-2">
             <div class="text-light-text dark:text-dark-text">
               <div class="mb-2 text-sm font-medium sm:text-base">
-                Информация о токенах:
+                Информация о ключе:
               </div>
               <div class="space-y-1 text-xs sm:text-sm">
                 <div>

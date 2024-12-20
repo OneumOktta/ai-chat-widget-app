@@ -1,6 +1,9 @@
 <script setup lang="ts">
   import PanelHeader from '~/components/panel/PanelHeader.vue'
   import PanelSidebar from '~/components/panel/PanelSidebar.vue'
+  definePageMeta({
+    middleware: ['panel'],
+  })
 </script>
 
 <template>
