@@ -28,9 +28,14 @@
 
 <template>
   <div class="flex flex-col gap-6 p-4">
-    <h3 class="text-xl font-bold text-light-text dark:text-dark-text">
-      Общая статистика
-    </h3>
+    <div class="space-y-1">
+      <h3 class="text-xl font-bold text-light-text dark:text-dark-text">
+        Общая статистика
+      </h3>
+      <div class="text-xs text-light-text/40 dark:text-dark-text/40">
+        ID ключа: {{ apiKeyStore.apiKeyInfo?.id }}
+      </div>
+    </div>
 
     <div v-if="stats" class="grid grid-cols-2 gap-6">
       <div class="flex flex-col gap-2">
