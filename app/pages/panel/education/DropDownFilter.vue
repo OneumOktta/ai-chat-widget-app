@@ -21,7 +21,7 @@
     >
       <span>{{ title }}: {{ selectedOption }}</span>
       <span :class="{ 'rotate-180': isOpen }" class="transition-transform">
-        <img src="/down.svg" alt="" class="h-6 w-6" />
+        <Icon name="heroicons:chevron-down" class="h-6 w-6" />
       </span>
     </button>
 
