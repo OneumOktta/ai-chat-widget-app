@@ -318,7 +318,6 @@
     return grouped
   })
 
-  // Функции для таб�� обучения
   const fetchTrainingData = async () => {
     try {
       const { data, error } = await useAuthFetch<BotInfoResponse>(
