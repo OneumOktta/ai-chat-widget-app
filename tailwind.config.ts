@@ -1,4 +1,3 @@
-/** @type {import('tailwindcss').Config} */
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
@@ -11,6 +10,9 @@ const config: Config = {
   ],
   darkMode: 'class',
   theme: {
+    fontFamily: {
+      Roboto: 'Roboto, sans-serif',
+    },
     extend: {
       colors: {
         paleViolet: '#C8A6FF',
@@ -36,9 +38,8 @@ const config: Config = {
         'primary-gradient': 'linear-gradient(45deg, #FF6CAB, #7366FF)',
         'primary-gradient-alt': 'linear-gradient(225deg, #FF6CAB, #7366FF)',
       },
-      fontFamily: {
-        golos: ['Golos Text', 'sans-serif'],
-        ttnorms: ['TT Norms', 'sans-serif'],
+      animation: {
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
     },
     container: {

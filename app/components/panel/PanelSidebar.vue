@@ -1,144 +1,129 @@
 <script setup lang="ts">
+  import type { MaybeElementRef } from '@vueuse/core'
+  import { onClickOutside } from '@vueuse/core'
   import { ref } from 'vue'
+  import type { PanelLink } from '~/constants/panel-navigation'
   import {
     panelNavigationDown,
+    panelNavigationMobile,
     panelNavigationUp,
   } from '~/constants/panel-navigation'
-  // Состояние для выпадающего списка "Поддержка"
   const isSupportDropdownOpen = ref(false)
-  // Функция для переключения состояния выпадающего списка
-  const toggleSupportDropdown = () => {
-    isSupportDropdownOpen.value = !isSupportDropdownOpen.value
+  const isNotificationsPanelOpen = ref(false)
+  const supportMenuRef = ref(null)
+  const notificationsPanelRef = ref(null)
+  const handleLinkClick = (event: Event, link: PanelLink) => {
+    if (link.isDropdown) {
+      event.preventDefault()
+      event.stopPropagation()
+      isSupportDropdownOpen.value = !isSupportDropdownOpen.value
+    }
   }
+  const toggleNotifications = () => {
+    isNotificationsPanelOpen.value = !isNotificationsPanelOpen.value
+  }
+  onClickOutside(
+    [supportMenuRef, notificationsPanelRef] as MaybeElementRef[],
+    () => {
+      isSupportDropdownOpen.value = false
+      isNotificationsPanelOpen.value = false
+    }
+  )
 </script>
 
 <template>
-  <aside class="h-full w-[100px]">
-    <div class="h-full rounded-2xl bg-light-panels dark:bg-dark-panels">
-      <div class="flex h-full flex-col py-4">
-        <!-- Верхние ссылки -->
-        <nav class="flex flex-none flex-col gap-4">
+  <aside
+    class="fixed bottom-2 left-2 right-2 z-50 h-16 rounded-2xl bg-light-panels dark:bg-dark-panels sm:bottom-3 sm:left-3 sm:right-3 md:bottom-4 md:left-4 md:right-4 lg:static lg:h-[calc(100vh-theme(spacing.40))] lg:w-[100px] lg:rounded-2xl"
+  >
+    <div
+      class="flex h-full flex-row justify-around px-2 sm:px-4 md:px-6 lg:flex-col lg:justify-start lg:px-0 lg:py-4"
+    >
+      <nav class="hidden lg:flex lg:flex-col lg:gap-4">
+        <SidebarLink
+          v-for="link in panelNavigationUp"
+          :key="link.to"
+          v-bind="link"
+        />
+      </nav>
+
+      <nav
+        class="flex flex-row items-center justify-between gap-2 sm:gap-4 lg:hidden"
+      >
+        <template v-for="link in panelNavigationMobile" :key="link.to">
           <SidebarLink
-            v-for="link in panelNavigationUp"
-            :key="link.to"
+            v-if="link.to !== '/panel/notifications'"
             v-bind="link"
+            @click="(e) => handleLinkClick(e, link)"
           />
-        </nav>
+          <NotificationsButton
+            v-else
+            :is-active="isNotificationsPanelOpen"
+            @click="toggleNotifications"
+          />
+        </template>
+      </nav>
 
-        <div class="flex-1"></div>
+      <div class="hidden flex-1 lg:block"></div>
 
-        <!-- Нижние ссылки -->
-        <nav class="relative flex flex-none flex-col gap-4">
+      <nav class="hidden lg:flex lg:flex-col lg:gap-4">
+        <template v-for="link in panelNavigationDown" :key="link.to">
           <SidebarLink
-            v-for="link in panelNavigationDown"
-            :key="link.to"
+            v-if="!link.isDropdown && link.to !== '/panel/notifications'"
             v-bind="link"
-            @click="link.to === '/panel/support' && toggleSupportDropdown()"
+            @click="(e) => handleLinkClick(e, link)"
           />
+          <NotificationsButton
+            v-else-if="link.to === '/panel/notifications'"
+            :is-active="isNotificationsPanelOpen"
+            @click="toggleNotifications"
+          />
+          <SupportButton
+            v-else
+            :icon="link.icon"
+            :text="link.text"
+            @click="handleLinkClick($event, link)"
+          />
+        </template>
 
-          <!-- Выпадающий список для "Поддержка" -->
-          <div
-            v-if="isSupportDropdownOpen"
-            class="absolute bottom-0 left-[115px] z-10 h-[276px] w-[448px] rounded-lg border border-gray-300 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-800"
-          >
-            <ul class="flex h-full flex-col justify-between gap-2">
-              <li
-                class="w-full px-4 py-2 hover:rounded-lg hover:border hover:border-purple-300 hover:bg-purple-200"
-              >
-                <NuxtLink
-                  to="/panel/support"
-                  class="text-lg text-gray-700 dark:text-gray-300"
-                >
-                  Справочный центр
-                </NuxtLink>
-              </li>
-              <li
-                class="w-full px-4 py-2 hover:rounded-lg hover:border hover:border-purple-300 hover:bg-purple-200"
-              >
-                <a href="#" class="text-lg text-gray-700 dark:text-gray-300">
-                  Общение в чате
-                </a>
-              </li>
-              <li
-                class="flex w-full justify-between px-4 py-2 hover:rounded-lg hover:border hover:border-purple-300 hover:bg-purple-200"
-              >
-                <a href="#" class="text-lg text-gray-700 dark:text-gray-300">
-                  Виджет поддержки
-                </a>
-                <label class="switch">
-                  <input type="checkbox" checked />
-                  <span class="slider"></span>
-                </label>
-              </li>
-              <li
-                class="w-full px-4 py-2 hover:rounded-lg hover:border hover:border-purple-300 hover:bg-purple-200"
-              >
-                <a href="#" class="text-lg text-gray-700 dark:text-gray-300">
-                  Поделиться отзывом
-                </a>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </div>
+        <SupportMenu
+          ref="supportMenuRef"
+          :is-open="isSupportDropdownOpen"
+          @close="isSupportDropdownOpen = false"
+        />
+      </nav>
     </div>
+
+    <NotificationsPanel
+      ref="notificationsPanelRef"
+      :is-open="isNotificationsPanelOpen"
+      @close="isNotificationsPanelOpen = false"
+    />
   </aside>
 </template>
 
 <style scoped>
-  /* Контейнер переключателя */
   .switch {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 25px;
+    @apply relative inline-block h-5 w-9;
   }
-  /* Скрываем стандартный чекбокс */
+
   .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+    @apply h-0 w-0 opacity-0;
   }
-  /* Стили для переключателя */
+
   .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: #e5e5e5; /* Серый фон для выключенного состояния */
-    border-radius: 25px;
-    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
-    transition: background 0.4s;
+    @apply absolute inset-0 cursor-pointer rounded-full bg-light-text/10 transition-all dark:bg-dark-text/10;
   }
-  /* Круглый ползунок */
-  .slider::before {
+
+  .slider:before {
     content: '';
-    position: absolute;
-    height: 19px;
-    width: 19px;
-    left: 3px;
-    bottom: 3px;
-    background: radial-gradient(circle, #ffffff, #d4cbfa, #c3aaf7);
-    border-radius: 50%;
-    box-shadow: 0 0 15px rgba(190, 160, 255, 0.6); /* Свечение вокруг ползунка */
-    transition:
-      transform 0.4s,
-      box-shadow 0.4s;
+    @apply absolute bottom-1 left-1 h-3 w-3 rounded-full bg-light-text transition-all dark:bg-dark-text;
   }
-  /* Состояние "включено" */
+
   input:checked + .slider {
-    background: linear-gradient(90deg, #a393fc, #cbb2ff); /* Цветной фон */
+    @apply bg-paleViolet;
   }
-  input:checked + .slider::before {
-    transform: translateX(25px); /* Перемещение вправо */
-    background: radial-gradient(
-      circle,
-      #ffffff,
-      #cbb2ff,
-      #a393fc
-    ); /* Цветной градиент */
-    box-shadow: 0 0 20px rgba(140, 110, 240, 0.8); /* Цветное свечение */
+
+  input:checked + .slider:before {
+    @apply translate-x-4 bg-white;
   }
 </style>

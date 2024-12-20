@@ -8,6 +8,7 @@ interface ApiResponse<T> {
 }
 
 export const useApiKeyStore = defineStore('apiKey', {
+  persist: true,
   state: (): ApiKeyState => ({
     isLoading: false,
     error: null,

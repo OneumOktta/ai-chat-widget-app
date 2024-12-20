@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import Onboarding from '~/components/panel/Onboarding.vue'
   import ChatStatsTile from '~/components/panel/tiles/ChatStatsTile.vue'
   import EducationTile from '~/components/panel/tiles/EducationTile.vue'
   import MessagesDistributionTile from '~/components/panel/tiles/MessagesDistributionTile.vue'
@@ -26,8 +27,10 @@
 </script>
 
 <template>
-  <div v-if="!panelStore.isLoading" class="flex min-h-screen flex-col">
-    <div class="grid h-full grid-cols-7 gap-4">
+  <div v-if="!panelStore.isLoading" class="h-full">
+    <Onboarding v-if="!panelStore.apiKeys.length" />
+
+    <div v-else class="grid h-full grid-cols-7 gap-4">
       <PanelTile :cols="3">
         <EducationTile />
       </PanelTile>

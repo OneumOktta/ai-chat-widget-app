@@ -5,7 +5,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return
   }
 
-  if (to.path === '/panel/login') {
+  if (to.path === '/login') {
     const accessToken = localStorage.getItem('accessToken')
     if (accessToken) {
       try {
@@ -23,18 +23,18 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (to.path.startsWith('/panel')) {
     const accessToken = localStorage.getItem('accessToken')
     if (!accessToken) {
-      return navigateTo('/panel/login', { replace: true })
+      return navigateTo('/login', { replace: true })
     }
 
     try {
       const { data, error } = await useAuthFetch<MeResponse>('/auth/me')
       if (error.value || !data.value?.success) {
         localStorage.removeItem('accessToken')
-        return navigateTo('/panel/login', { replace: true })
+        return navigateTo('/login', { replace: true })
       }
     } catch (err) {
       localStorage.removeItem('accessToken')
-      return navigateTo('/panel/login', { replace: true })
+      return navigateTo('/login', { replace: true })
     }
   }
 })

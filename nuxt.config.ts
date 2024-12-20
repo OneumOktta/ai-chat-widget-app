@@ -30,8 +30,12 @@ export default defineNuxtConfig({
   ],
 
   googleFonts: {
+    prefetch: true,
+    preconnect: true,
+    preload: true,
+    display: 'swap',
     families: {
-      'Golos Text': true,
+      Roboto: true,
     },
   },
   colorMode: {
@@ -46,5 +50,11 @@ export default defineNuxtConfig({
     host: '0.0.0.0',
     port: 3100,
   },
-  css: ['~/assets/css/fonts.css'],
+  postcss: {
+    plugins: {
+      'tailwindcss/nesting': {},
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
 })

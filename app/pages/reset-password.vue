@@ -4,10 +4,6 @@
   import { z } from 'zod'
   import { resetPasswordSchema } from '~/schemas/auth.schema'
 
-  definePageMeta({
-    layout: 'auth',
-  })
-
   const route = useRoute()
   const router = useRouter()
 
@@ -75,7 +71,7 @@
       if (response.success) {
         success.value = true
         setTimeout(() => {
-          router.push('/panel/login')
+          router.push('/login')
         }, 2000)
       }
     } catch (err) {
@@ -91,7 +87,9 @@
 </script>
 
 <template>
-  <div class="mx-auto w-1/3 min-w-[400px]">
+  <div
+    class="mx-auto w-full max-w-[400px] px-4 sm:max-w-[450px] sm:px-0 md:max-w-[500px] lg:max-w-[550px]"
+  >
     <template v-if="loading">
       <div class="text-center">
         <h2

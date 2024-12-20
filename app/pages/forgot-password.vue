@@ -4,10 +4,6 @@
   import { z } from 'zod'
   import { translateError } from '~/schemas/auth.schema'
 
-  definePageMeta({
-    layout: 'auth',
-  })
-
   const email = ref('')
   const loading = ref(false)
   const error = ref<string | null>(null)
@@ -55,7 +51,9 @@
 </script>
 
 <template>
-  <div class="mx-auto w-1/3 min-w-[400px]">
+  <div
+    class="mx-auto w-full max-w-[400px] px-4 sm:max-w-[450px] sm:px-0 md:max-w-[500px] lg:max-w-[550px]"
+  >
     <h1 class="mb-10 text-center text-3xl font-semibold">
       Восстановление пароля
     </h1>
@@ -87,7 +85,7 @@
           <p class="text-light-text/60 dark:text-dark-text/60">
             Вспомнили пароль?
             <NuxtLink
-              to="/panel/login"
+              to="/login"
               class="text-lightPink transition-colors hover:text-lightBlue"
             >
               Вход

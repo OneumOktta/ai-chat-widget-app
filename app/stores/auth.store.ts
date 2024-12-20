@@ -102,7 +102,7 @@ export const useAuthStore = defineStore('authStore', {
         this.user = null
         this.tokens = null
         localStorage.removeItem('accessToken')
-        navigateTo('/panel/login')
+        navigateTo('/login')
       }
     },
   },
